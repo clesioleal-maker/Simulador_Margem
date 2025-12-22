@@ -3,97 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Margem Varejo</title>
-    
+    <title>SIMULADOR MARGEM VAREJO</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#00d2ff">
     <link rel="icon" type="image/png" href="IMAGEM_SIMULADOR.png">
     <link rel="apple-touch-icon" href="IMAGEM_SIMULADOR.png">
-
     <style>
-        :root {
-            --cor-gold: #ffcc00; 
-            --cor-blue: #00d2ff;                 
-            --cor-red: #ff4d4d;
-            --bg-input: rgba(0, 0, 0, 0.5);
-        }
-
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); 
-            color: white; margin: 0; padding: 15px; min-height: 100vh;
-        }
-
-        /* AJUSTE DO CABEÇALHO E BOTÃO */
-        .header-controls { 
-            text-align: center; 
-            margin-bottom: 25px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-        h1 { font-size: 20px; color: var(--cor-blue); text-transform: uppercase; letter-spacing: 1px; margin: 0; }
-
-        .btn-limpar {
-            background: rgba(255, 255, 255, 0.1); 
-            border: 1px solid var(--cor-blue);
-            color: var(--cor-blue); 
-            padding: 10px 25px; 
-            border-radius: 12px;
-            cursor: pointer; 
-            font-size: 11px; 
-            font-weight: bold; 
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
-        .btn-limpar:hover { background: var(--cor-blue); color: #000; }
-
+        :root { --cor-gold: #ffcc00; --cor-blue: #00d2ff; --cor-red: #ff4d4d; --bg-input: rgba(0, 0, 0, 0.5); }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #0f2027, #2c5364); color: white; margin: 0; padding: 15px; min-height: 100vh; }
+        .header-controls { text-align: center; margin-bottom: 25px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        h1 { font-size: 20px; color: var(--cor-blue); text-transform: uppercase; margin: 0; }
+        .btn-limpar { background: rgba(255, 255, 255, 0.1); border: 1px solid var(--cor-blue); color: var(--cor-blue); padding: 10px 25px; border-radius: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
         .container-cenarios { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-
-        .card { 
-            background: rgba(255, 255, 255, 0.08); 
-            backdrop-filter: blur(20px); 
-            padding: 20px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            flex: 1; 
-            min-width: 360px; 
-            max-width: 400px; 
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
+        .card { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); padding: 20px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.15); flex: 1; min-width: 360px; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: 0.4s; }
         .card.winner { border: 3px solid var(--cor-gold); transform: translateY(-5px); }
         .card.winner .scenario-label, .card.winner .total-row { background: var(--cor-gold) !important; color: #000 !important; }
-
         .card.loser { border: 3px solid var(--cor-red); }
         .card.loser .scenario-label, .card.loser .total-row { background: var(--cor-red) !important; color: #fff !important; }
-
-        .scenario-label {
-            background: var(--cor-blue); color: #0f2027; text-align: center;
-            font-weight: bold; padding: 12px; border-radius: 12px;
-            margin-bottom: 15px; font-size: 16px; text-transform: uppercase;
-        }
-
-        .section-title { 
-            border-bottom: 1px solid rgba(0, 210, 255, 0.3); margin: 15px 0 8px 0; 
-            padding-bottom: 3px; font-weight: bold; text-transform: uppercase; font-size: 9px; color: var(--cor-blue); 
-        }
-
+        .scenario-label { background: var(--cor-blue); color: #0f2027; text-align: center; font-weight: bold; padding: 12px; border-radius: 12px; margin-bottom: 15px; text-transform: uppercase; }
+        .section-title { border-bottom: 1px solid rgba(0, 210, 255, 0.3); margin: 15px 0 8px 0; padding-bottom: 3px; font-weight: bold; text-transform: uppercase; font-size: 9px; color: var(--cor-blue); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
         label { display: block; font-weight: bold; color: var(--cor-blue); text-transform: uppercase; margin-bottom: 3px; font-size: 8px; }
-        
-        input { 
-            width: 100%; padding: 10px; border-radius: 10px; 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            background: var(--bg-input); color: white; font-size: 14px; box-sizing: border-box; outline: none;
-        }
-
+        input { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); background: var(--bg-input); color: white; font-size: 14px; box-sizing: border-box; outline: none; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; background: rgba(0, 0, 0, 0.2); border-radius: 12px; overflow: hidden; }
         td { padding: 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .val-col { text-align: right; font-weight: bold; font-family: 'Courier New', monospace; font-size: 14px; }
-        
+        .val-col { text-align: right; font-weight: bold; font-family: monospace; font-size: 14px; }
         .total-row { background: var(--cor-blue); color: #0f2027; font-weight: bold; }
         .total-row td { padding: 16px; font-size: 20px; border-bottom: none; }
     </style>
@@ -101,11 +35,11 @@
 <body>
 
 <div class="header-controls">
-    <h1>Margem Varejo</h1>
+    <h1>SIMULADOR MARGEM VAREJO</h1>
     <button class="btn-limpar" onclick="limparTudo()">Limpar Simulações</button>
 </div>
 
-<div class="container-cenarios" id="container">
+<div class="container-cenarios">
     <script>
         for(let i=1; i<=3; i++) {
             document.write(`
@@ -113,32 +47,32 @@
                 <div class="scenario-label">CENÁRIO 0${i}</div>
                 <div class="section-title">Entrada Indústria</div>
                 <div class="grid">
-                    <div class="input-group"><label>Net Fornecedor</label><input type="number" id="net_${i}" class="input-field" value="145.43" oninput="calcular()"></div>
-                    <div class="input-group"><label>IPI %</label><input type="number" id="ipi_${i}" class="input-field" value="6.5" oninput="calcular()"></div>
-                    <div class="input-group"><label>ICMS Ent. %</label><input type="number" id="icmse_${i}" class="input-field" value="7.0" oninput="calcular()"></div>
-                    <div class="input-group"><label>PIS/COF Ent. %</label><input type="number" id="pise_${i}" class="input-field" value="9.25" oninput="calcular()"></div>
+                    <div class="input-group"><label>Net Fornecedor</label><input type="number" id="net_${i}" class="in" value="145.43" oninput="calcular()"></div>
+                    <div class="input-group"><label>IPI %</label><input type="number" id="ipi_${i}" class="in" value="6.5" oninput="calcular()"></div>
+                    <div class="input-group"><label>ICMS Ent. %</label><input type="number" id="icmse_${i}" class="in" value="7.0" oninput="calcular()"></div>
+                    <div class="input-group"><label>PIS/COF Ent. %</label><input type="number" id="pise_${i}" class="in" value="9.25" oninput="calcular()"></div>
                 </div>
                 <div class="section-title">Saída Varejo</div>
                 <div class="grid">
-                    <div class="input-group"><label>Venda PSC</label><input type="number" id="venda_${i}" class="input-field" value="249.00" oninput="calcular()"></div>
-                    <div class="input-group"><label>MVA %</label><input type="number" id="mva_${i}" class="input-field" value="70.0" oninput="calcular()"></div>
-                    <div class="input-group"><label>ICMS Saída %</label><input type="number" id="icmss_${i}" class="input-field" value="20.0" oninput="calcular()"></div>
-                    <div class="input-group"><label>PIS/COF Saída %</label><input type="number" id="piss_${i}" class="input-field" value="9.25" oninput="calcular()"></div>
+                    <div class="input-group"><label>Venda PSC</label><input type="number" id="venda_${i}" class="in" value="249.00" oninput="calcular()"></div>
+                    <div class="input-group"><label>MVA %</label><input type="number" id="mva_${i}" class="in" value="70.0" oninput="calcular()"></div>
+                    <div class="input-group"><label>ICMS Saída %</label><input type="number" id="icmss_${i}" class="in" value="20.0" oninput="calcular()"></div>
+                    <div class="input-group"><label>PIS/COF Saída %</label><input type="number" id="piss_${i}" class="in" value="9.25" oninput="calcular()"></div>
                 </div>
                 <div class="section-title">Acordos</div>
                 <div class="grid">
-                    <div class="input-group"><label>Contrato %</label><input type="number" id="cont_${i}" class="input-field" value="4.1" oninput="calcular()"></div>
-                    <div class="input-group"><label>Verba VPC Unit.</label><input type="number" id="vpc_${i}" class="input-field" value="27.00" oninput="calcular()"></div>
+                    <div class="input-group"><label>Contrato %</label><input type="number" id="cont_${i}" class="in" value="4.1" oninput="calcular()"></div>
+                    <div class="input-group"><label>Verba VPC Unit.</label><input type="number" id="vpc_${i}" class="in" value="27.00" oninput="calcular()"></div>
                 </div>
                 <div class="section-title">Memória de Cálculo</div>
                 <table>
-                    <tr><td>Custo Gross</td><td class="val-col" id="res_gross_${i}">R$ 0,00</td></tr>
+                    <tr><td>Custo Líquido (Real)</td><td class="val-col" id="res_net_real_${i}">R$ 0,00</td></tr>
                     <tr class="total-row"><td>MARGEM FINAL %</td><td class="val-col" id="res_margem_${i}">0%</td></tr>
                 </table>
                 <div class="section-title">Análise de Ação</div>
                 <div class="grid">
-                    <div class="input-group"><label>QTD AÇÃO VPC</label><input type="number" id="q_vpc_${i}" class="input-field" value="100" oninput="calcular()"></div>
-                    <div class="input-group"><label>SELL IN QTD</label><input type="number" id="q_si_${i}" class="input-field" value="1000" oninput="calcular()"></div>
+                    <div class="input-group"><label>QTD AÇÃO VPC</label><input type="number" id="q_vpc_${i}" class="in" value="100" oninput="calcular()"></div>
+                    <div class="input-group"><label>SELL IN QTD</label><input type="number" id="q_si_${i}" class="in" value="1000" oninput="calcular()"></div>
                 </div>
                 <table>
                     <tr><td>VPC Gerado</td><td class="val-col" id="res_vpc_${i}">R$ 0,00</td></tr>
@@ -151,52 +85,75 @@
         function calcular() {
             let res = [];
             for(let i=1; i<=3; i++) {
-                const n = parseFloat(document.getElementById(`net_${i}`).value) || 0;
-                const v = parseFloat(document.getElementById(`venda_${i}`).value) || 0;
-                const vpc = parseFloat(document.getElementById(`vpc_${i}`).value) || 0;
-                const qsi = parseFloat(document.getElementById(`q_si_${i}`).value) || 0;
-                const qvpc = parseFloat(document.getElementById(`q_vpc_${i}`).value) || 0;
-                const ipi = (parseFloat(document.getElementById(`ipi_${i}`).value) || 0)/100;
-                
-                const gross = n * (1 + ipi);
-                const margem = v > 0 ? Math.round(((v - gross + vpc) / v) * 100) : 0;
+                // Entrada
+                const net = parseFloat(document.getElementById(`net_${i}`).value) || 0;
+                const ipi = (parseFloat(document.getElementById(`ipi_${i}`).value) || 0) / 100;
+                const icmsE = (parseFloat(document.getElementById(`icmse_${i}`).value) || 0) / 100;
+                const pisE = (parseFloat(document.getElementById(`pise_${i}`).value) || 0) / 100;
 
-                const f = (val) => val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                document.getElementById(`res_gross_${i}`).innerText = f(gross);
-                document.getElementById(`res_margem_${i}`).innerText = margem + "%";
+                // Saída
+                const venda = parseFloat(document.getElementById(`venda_${i}`).value) || 0;
+                const icmsS = (parseFloat(document.getElementById(`icmss_${i}`).value) || 0) / 100;
+                const pisS = (parseFloat(document.getElementById(`piss_${i}`).value) || 0) / 100;
+
+                // Acordos
+                const vpc = parseFloat(document.getElementById(`vpc_${i}`).value) || 0;
+                const cont = (parseFloat(document.getElementById(`cont_${i}`).value) || 0) / 100;
+
+                // --- MATEMÁTICA ---
+                
+                // 1. Custo Real = Net Fornecedor + IPI - Crédito ICMS Entrada - Crédito PIS/COF Entrada
+                const v_ipi = net * ipi;
+                const v_icmsE = net * icmsE;
+                const v_pisE = net * pisE;
+                const custoLiquidoReal = net + v_ipi - v_icmsE - v_pisE;
+
+                // 2. Venda Líquida = Preço de Venda - ICMS Saída - PIS/COF Saída
+                const vendaLiquida = venda * (1 - (icmsS + pisS));
+
+                // 3. Margem Final
+                let margemTotal = 0;
+                if (vendaLiquida > 0) {
+                    // Margem = ((Venda Líq - Custo Real + VPC) / Venda Líq) + % de Contrato
+                    const lucroUnitario = (vendaLiquida - custoLiquidoReal + vpc);
+                    margemTotal = (lucroUnitario / vendaLiquida) + cont;
+                }
+
+                // --- EXIBIÇÃO ---
+                const f = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                document.getElementById(`res_net_real_${i}`).innerText = f(custoLiquidoReal);
+                document.getElementById(`res_margem_${i}`).innerText = Math.round(margemTotal * 100) + "%";
+
+                const qvpc = parseFloat(document.getElementById(`q_vpc_${i}`).value) || 0;
+                const qsi = parseFloat(document.getElementById(`q_si_${i}`).value) || 0;
                 document.getElementById(`res_vpc_${i}`).innerText = f(qvpc * vpc);
-                document.getElementById(`res_ns_${i}`).innerText = f(qsi * n);
-                res.push({id: i, m: margem});
+                document.getElementById(`res_ns_${i}`).innerText = f(qsi * net);
+
+                res.push({id: i, m: Math.round(margemTotal * 100)});
             }
 
+            // Winner/Loser
             const mValues = res.map(r => r.m);
             const max = Math.max(...mValues);
             const min = Math.min(...mValues);
             const isAllEqual = mValues.every(v => v === mValues[0]);
 
             res.forEach(r => {
-                const c = document.getElementById(`card_obj_${r.id}`);
-                c.classList.remove('winner', 'loser');
+                const card = document.getElementById(`card_obj_${r.id}`);
+                card.classList.remove('winner', 'loser');
                 if(!isAllEqual) {
-                    if(r.m === max) c.classList.add('winner');
-                    else if(r.m === min) c.classList.add('loser');
+                    if(r.m === max) card.classList.add('winner');
+                    else if(r.m === min) card.classList.add('loser');
                 }
             });
         }
 
         function limparTudo() {
-            document.querySelectorAll('.input-field').forEach(input => input.value = "");
+            document.querySelectorAll('.in').forEach(el => el.value = "");
             calcular();
         }
-
         calcular();
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js');
-        }
     </script>
 </div>
 </body>
 </html>
-
-
