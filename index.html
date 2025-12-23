@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador Margem Varejo</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#013a63">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <style>
         :root {
             --bg-deep: #013a63;
@@ -40,7 +46,6 @@
 
         .btn-limpar { color: var(--accent); border: 1px solid var(--accent); }
         .btn-replicar { color: var(--winner); border: 1px solid var(--winner); }
-        
         .btn-header:hover { background: rgba(255, 255, 255, 0.1); }
 
         .scenarios-container {
@@ -121,56 +126,75 @@
 
     <div class="scenarios-container">
         <script>
-            function calcular(id, origem) {
-                const getV = (name) => parseFloat(document.getElementById(`${name}_${id}`).value) || 0;
-                const setV = (name, val) => document.getElementById(`${name}_${id}`).value = val.toFixed(2);
+   function calcular(id, origem) {
+    const getV = (name) => parseFloat(document.getElementById(`${name}_${id}`).value) || 0;
+    const setV = (name, val) => document.getElementById(`${name}_${id}`).value = val.toFixed(2);
 
-                let d3 = getV('d3');
-                let d7 = getV('d7');
-                const ipiP = getV('ipi'), icmsE = getV('icmsE'), pisE = getV('pisE');
-                const d14 = getV('d14'), c17 = getV('mva'), icmsS = getV('icmsS'), pisS = getV('pisS');
-                const contP = getV('cont'), d30 = getV('d30'), qVpc = getV('qvpc'), qSell = getV('qsell');
+    let d3 = getV('d3');
+    let d7 = getV('d7');
+    const ipiP = getV('ipi'), icmsE = getV('icmsE'), pisE = getV('pisE');
+    const d14 = getV('d14'), c17 = getV('mva'), icmsS = getV('icmsS'), pisS = getV('pisS');
+    const contP = getV('cont'), d30 = getV('d30'), qVpc = getV('qvpc'), qSell = getV('qsell');
 
-                if (origem === 'net') {
-                    const d6 = (pisE > 0) ? (d3 / (1 - (pisE/100))) - d3 : 0;
-                    const d5 = (icmsE > 0) ? ((d3 + d6) / (1 - (icmsE/100))) - (d3 + d6) : 0;
-                    d7 = d3 + d5 + d6;
-                    setV('d7', d7);
-                } else if (origem === 'gross') {
-                    d3 = d7 * (1 - (pisE/100)) * (1 - (icmsE/100));
-                    setV('d3', d3);
-                }
+    if (origem === 'net') {
+        const d6 = (pisE > 0) ? (d3 / (1 - (pisE/100))) - d3 : 0;
+        const d5 = (icmsE > 0) ? ((d3 + d6) / (1 - (icmsE/100))) - (d3 + d6) : 0;
+        d7 = d3 + d5 + d6;
+        setV('d7', d7);
+    } else if (origem === 'gross') {
+        d3 = d7 * (1 - (pisE/100)) * (1 - (icmsE/100));
+        setV('d3', d3);
+    }
 
-                const d5_calc = (icmsE > 0) ? (d7 - (d7 * (1 - (icmsE/100)))) : 0;
-                const d12 = d7 * (1 + (ipiP/100));
-                const d17 = d12 * (1 + (c17 / 100));
-                const d18 = ((icmsS/100) * d17) - d5_calc;
-                const d20 = -((pisS/100) * (d7 + (d7 * ipiP/100)));
-                const d22 = d12 + d18 + d20;
+    const d5_calc = (icmsE > 0) ? (d7 - (d7 * (1 - (icmsE/100)))) : 0;
+    const d12 = d7 * (1 + (ipiP/100));
+    const d17 = d12 * (1 + (c17 / 100));
+    const d18 = ((icmsS/100) * d17) - d5_calc;
+    const d20 = -((pisS/100) * (d7 + (d7 * ipiP/100)));
+    const d22 = d12 + d18 + d20;
 
-                const d24 = d14 * (pisS/100);
-                const lucroR = (d14 - d22 - d24) + (d3 * contP/100) + d30;
-                const margemVal = (d14 > 0) ? (lucroR / (d14 - d24)) * 100 : 0;
+    const d24 = d14 * (pisS/100);
+    const lucroR = (d14 - d22 - d24) + (d3 * (contP/100)) + d30;
+    const margemVal = (d14 > 0) ? (lucroR / (d14 - d24)) * 100 : 0;
 
-                const f = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-                
-                // Exibição com o nome Margem separado por espaço
-                document.getElementById(`margem_res_${id}`).innerText = "Margem: " + Math.max(0, Math.round(margemVal)) + "%";
-                
-                document.getElementById(`vpc_res_${id}`).innerText = f(qVpc * d30);
-                document.getElementById(`net_res_${id}`).innerText = f(qSell * d3);
-                destacarMelhor();
-            }
+    const f = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    
+    // ATUALIZADO: Mostra margem negativa e muda a cor se for menor que zero
+    const margemFinal = Math.round(margemVal);
+    const campoMargem = document.getElementById(`margem_res_${id}`);
+    campoMargem.innerText = "Margem: " + margemFinal + "%";
+    
+    // Estética: se a margem for negativa, o texto fica vermelho para alertar
+    campoMargem.style.color = margemFinal < 0 ? "#ff3131" : "#000";
+    
+    document.getElementById(`vpc_res_${id}`).innerText = f(qVpc * d30);
+    document.getElementById(`net_res_${id}`).innerText = f(qSell * d3);
+    
+    destacarMelhor();
+}
+
+function destacarMelhor() {
+    let maior = -Infinity; 
+    let vencedor = null;
+    for(let i=1; i<=3; i++) {
+        const textoRaw = document.getElementById(`margem_res_${i}`).innerText;
+        // Agora aceita números negativos na comparação também
+        const m = parseInt(textoRaw.replace('Margem: ', '').replace('%', '')) || -999;
+        const card = document.getElementById(`card_${i}`);
+        card.classList.remove('winner');
+        if(m > maior) { maior = m; vencedor = card; }
+    }
+    // Só destaca se a margem for maior que 0
+    if(vencedor && maior > 0) vencedor.classList.add('winner');
+}
 
             function replicarCenario1() {
                 const campos = ['d3', 'd7', 'ipi', 'icmsE', 'pisE', 'd14', 'mva', 'icmsS', 'pisS', 'cont', 'd30', 'qvpc', 'qsell'];
-                
                 campos.forEach(campo => {
                     const valorBase = document.getElementById(`${campo}_1`).value;
                     document.getElementById(`${campo}_2`).value = valorBase;
                     document.getElementById(`${campo}_3`).value = valorBase;
                 });
-
                 calcular(2, 'none');
                 calcular(3, 'none');
             }
@@ -178,21 +202,12 @@
             function destacarMelhor() {
                 let maior = -Infinity; 
                 let vencedor = null;
-
                 for(let i=1; i<=3; i++) {
-                    const elemento = document.getElementById(`margem_res_${i}`);
-                    const textoRaw = elemento.innerText;
-                    
-                    // Tratamento para extrair apenas o número ignorando "Margem: " e "%"
+                    const textoRaw = document.getElementById(`margem_res_${i}`).innerText;
                     const m = parseInt(textoRaw.replace('Margem: ', '').replace('%', '')) || 0;
-                    
                     const card = document.getElementById(`card_${i}`);
                     card.classList.remove('winner');
-                    
-                    if(m > maior && m > 0) { 
-                        maior = m; 
-                        vencedor = card; 
-                    }
+                    if(m > maior && m > 0) { maior = m; vencedor = card; }
                 }
                 if(vencedor) vencedor.classList.add('winner');
             }
@@ -211,7 +226,6 @@
                 document.write(`
                 <div class="card" id="card_${i}">
                     <div class="scenario-title">CENÁRIO 0${i}</div>
-                    
                     <div>
                         <h4>Entrada</h4>
                         <div class="input-row">
@@ -226,7 +240,6 @@
                             <div class="field"><label>PIS/COF Ent %</label><input type="number" id="pisE_${i}" oninput="calcular(${i}, 'net')"></div>
                             <div class="field" style="visibility:hidden"><label>-</label><input type="number"></div>
                         </div>
-
                         <h4>Saída Varejo</h4>
                         <div class="input-row">
                             <div class="field"><label>Venda PSC</label><input type="number" id="d14_${i}" oninput="calcular(${i}, 'net')"></div>
@@ -236,19 +249,16 @@
                             <div class="field"><label>ICMS Saída %</label><input type="number" id="icmsS_${i}" oninput="calcular(${i}, 'net')"></div>
                             <div class="field"><label>PIS/COF Saída %</label><input type="number" id="pisS_${i}" oninput="calcular(${i}, 'net')"></div>
                         </div>
-
                         <h4>Acordos</h4>
                         <div class="input-row">
                             <div class="field"><label>Contrato %</label><input type="number" id="cont_${i}" oninput="calcular(${i}, 'net')"></div>
                             <div class="field"><label>VPC Unit.</label><input type="number" id="d30_${i}" oninput="calcular(${i}, 'net')"></div>
                         </div>
                     </div>
-
                     <div>
                         <div class="memoria-box">
                             <div class="margem-final-display"><span id="margem_res_${i}">0%</span></div>
                         </div>
-
                         <h4>Ação</h4>
                         <div class="input-row">
                             <div class="field"><label>Sell-in Qtd</label><input type="number" id="qsell_${i}" oninput="calcular(${i}, 'net')"></div>
@@ -264,5 +274,13 @@
             }
         </script>
     </div>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => console.log("PWA Ativo!"))
+          .catch((err) => console.log("Erro PWA:", err));
+      }
+    </script>
 </body>
 </html>
